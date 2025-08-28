@@ -19,11 +19,11 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       {/* Logo */}
       <div className="p-4 bg-blue-800 text-center">
         <img
-          src="/images/logo.png"
+          src="/images/logo.jpeg"
           alt="Logo"
           className="w-24 h-24 mx-auto mb-2 rounded-full"
         />
-        <h2 className="text-xl font-bold">Orders-APP</h2>
+        <h2 className="text-xl font-bold">Style Shop -APP</h2>
       </div>
 
       {/* Menú */}
