@@ -8,7 +8,8 @@ import Login from './components/auth/Login'
 import Dashboard from './components/dash/Dashboard';
 import Layout from './components/dash/Layout';
 import Catalogos from './components/catalogos/Catalogos';
-//import Categorias from './components/catalogos/Categorias';
+import Categorias from './components/catalogos/Categorias';
+import Marcas from './components/catalogos/Marcas';
 
 const ProtectedRoute = ({children}) => {
     const {user} = useAuth();
@@ -47,11 +48,15 @@ const router = createBrowserRouter([
             {
                 path: 'catalogos',
                 element:<Catalogos/>
-            }
-           /* {
+            },
+           {
                 path: 'categorias',
                 element:<Categorias/>
-            }*/
+            },
+            {
+                path: 'marcas',
+                element:<Marcas/>
+            }
         ]
     }
 ]);
