@@ -6,7 +6,7 @@ import { urlBase } from "../utils/config";
 
 const Login = () => {
   // Estado del formulario
-  const [credentials, setCredentials] = useState({ correo: "", password: "" });
+  const [credentials, setCredentials] = useState({ username: "", password: "" }); // Cambiado a username
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +34,7 @@ const Login = () => {
       }
     } catch (err) {
       const code = err?.response?.status;
-      if (code === 401) setError("Correo o contraseña inválidos");
+      if (code === 401) setError("Usuario o contraseña inválidos");
       else if (code === 403) setError("Usuario no autorizado");
       else setError("Error inesperado. Intenta de nuevo.");
       console.error("Login error:", err);
@@ -55,18 +55,18 @@ const Login = () => {
         {/* Formulario de login */}
         <form onSubmit={sendLogin} className="space-y-6">
           <div>
-            <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
-              Correo
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Usuario
             </label>
             <div className="mt-1">
               <input
-                type="email"
-                id="correo"
-                value={credentials.correo}
+                type="text"
+                id="username"
+                value={credentials.username}
                 onChange={(e) =>
-                  setCredentials({ ...credentials, correo: e.target.value })
+                  setCredentials({ ...credentials, username: e.target.value })
                 }
-                autoComplete="email"
+                autoComplete="username"
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400
                            shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
