@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 ./utils/config.js
 ./.env
+.env
+config.js

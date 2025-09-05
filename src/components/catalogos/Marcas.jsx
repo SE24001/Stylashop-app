@@ -11,6 +11,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
 import { urlBase } from '../utils/config';
+import { fetchMarcas } from '../services/catalogosService';
 
 export default function Marcas() {
     let emptyMarca = {
@@ -30,7 +31,7 @@ export default function Marcas() {
     const toast = useRef(null);
     const dt = useRef(null);
 
-    // Función para obtener las marcas desde la API
+    /* // Función para obtener las marcas desde la API
     const fetchMarcas = async (token) => {
         try {
             const response = await axios.get(`${urlBase}/marcas`, {
@@ -49,7 +50,7 @@ export default function Marcas() {
             });
             return [];
         }
-    };
+    }; */
 
     useEffect(() => {
         const loadMarcas = async () => {

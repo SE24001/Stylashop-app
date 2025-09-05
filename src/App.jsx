@@ -10,6 +10,7 @@ import Layout from './components/dash/Layout';
 import Catalogos from './components/catalogos/Catalogos';
 import Categorias from './components/catalogos/Categorias';
 import Marcas from './components/catalogos/Marcas';
+import Productos from './components/catalogos/Productos';
 
 const ProtectedRoute = ({children}) => {
     const {user} = useAuth();
@@ -56,7 +57,12 @@ const router = createBrowserRouter([
             {
                 path: 'marcas',
                 element:<Marcas/>
+            },
+            {
+                path: 'productos',
+                element:<Productos/>
             }
+    
         ]
     }
 ]);
