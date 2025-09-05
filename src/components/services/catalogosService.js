@@ -16,3 +16,16 @@ import { urlBase } from "../utils/config";
             return[];
         }
     }
+    export const fetchMarcas = async (token) => {
+        try{
+            const response = await axios.get(`${urlBase}/marcas`, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return( response.data);
+        }catch(err){
+            Swal.fire('Error',"No se pudo obtener el listado de categrías", 'error');
+            return[];
+        }
+    }
