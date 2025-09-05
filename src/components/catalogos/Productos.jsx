@@ -112,7 +112,7 @@ export default function Productos() {
             if (producto.id == null) {
                 // Insertar producto
                 try{
-                    const response = await axios.post(`${urlBase}productos`, formData,{
+                    const response = await axios.post(`${urlBase}/productos`, formData,{
                         headers:{
                             'Content-Type': 'multipart/form-data',
                             'Authorization': `Bearer ${token}`
@@ -135,7 +135,7 @@ export default function Productos() {
             } else {
                 // Actualizar producto
                 try {
-                    const response = await axios.put(`${urlBase}productos/${producto.id}`, formData, {
+                    const response = await axios.put(`${urlBase}/productos/${producto.id}`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
                             'Authorization': `Bearer ${token}`
@@ -177,7 +177,7 @@ export default function Productos() {
     const deleteProducto = async () => {
         let _productos = productos.filter((val) => val.id !== producto.id);
         try {
-            const response = await axios.delete(`${urlBase}productos/${producto.id}`, {
+            const response = await axios.delete(`${urlBase}/productos/${producto.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.status === 200) {
@@ -240,13 +240,14 @@ export default function Productos() {
         <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
     );
 
-    const imageBodyTemplate = (rowData) => (
-        rowData.imagenUrl ? (
-            <img src={`${IMAGES_URL}${rowData.imagenUrl}`} alt={rowData.nombre} style={{width:'64px', borderRadius: '4px'}} />
-        ) : (
-            <span>No Image</span>
-        )
-    );
+    const imageBodyTemplate = (rowData) => {
+        if (!rowData || !rowData.imagenUrl) {
+            return <span>No Image</span>;
+        }
+        return (
+            <img src={`${IMAGES_URL}${rowData.imagenUrl}`} alt={rowData.nombre || ''} style={{width:'64px', borderRadius: '4px'}} />
+        );
+    };
 
     const priceBodyTemplate = (rowData) => formatCurrency(rowData.precioUnitario);
 
