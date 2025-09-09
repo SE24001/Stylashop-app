@@ -5,7 +5,7 @@ import { urlBase } from "../utils/config";
 
     export const fetchCategorias = async (token) => {
         try{
-            const response = await axios.get(`${urlBase}/categorias`, {
+            const response = await axios.get(`${urlBase}categorias`, {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -18,7 +18,7 @@ import { urlBase } from "../utils/config";
     }
     export const fetchMarcas = async (token) => {
         try{
-            const response = await axios.get(`${urlBase}/marcas`, {
+            const response = await axios.get(`${urlBase}marcas`, {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }

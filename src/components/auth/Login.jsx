@@ -21,7 +21,7 @@ const Login = () => {
 
     try {
       const { data, status } = await axios.post(
-        `${urlBase}/auth/login`,
+        `${urlBase}auth/login`,
         credentials
       );
 
