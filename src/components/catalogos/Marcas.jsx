@@ -87,7 +87,7 @@ export default function Marcas() {
             if (_marca.id != null) {
                 // Actualizar una marca
                 try {
-                    const response = await axios.put(`${urlBase}/marcas/${_marca.id}`, _marca, {
+                    const response = await axios.put(`${urlBase}marcas/${_marca.id}`, _marca, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -141,7 +141,7 @@ export default function Marcas() {
             } else {
                 // Nueva marca
                 try {
-                    const response = await axios.post(`${urlBase}/marcas`, _marca, {
+                    const response = await axios.post(`${urlBase}marcas`, _marca, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -197,7 +197,7 @@ export default function Marcas() {
     const deleteMarca = async () => {
         let _marcas = marcas.filter((val) => val.id !== marca.id);
         try {
-            const response = await axios.delete(`${urlBase}/marcas/${marca.id}`, {
+            const response = await axios.delete(`${urlBase}marcas/${marca.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

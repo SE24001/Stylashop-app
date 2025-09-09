@@ -72,7 +72,7 @@ export default function Categorias() {
             if (_categoria.id != null) {
                // actualizar una categoria
             try {
-                const response = await axios.put(`${urlBase}/categorias/${_categoria.id}`, _categoria, {
+                const response = await axios.put(`${urlBase}categorias/${_categoria.id}`, _categoria, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -128,7 +128,7 @@ export default function Categorias() {
             } else {
                     //nueva categoria
                     try{
-                        const response = await axios.post(`${urlBase}/categorias`, _categoria, {
+                        const response = await axios.post(`${urlBase}categorias`, _categoria, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -173,7 +173,7 @@ export default function Categorias() {
     const deleteCategoria= async () => {
         let _categorias = categorias.filter((val) => val.id !== categoria.id);
         try{
-            const response = await axios.delete(`${urlBase}/categorias/${categoria.id}`, {
+            const response = await axios.delete(`${urlBase}categorias/${categoria.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

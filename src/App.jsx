@@ -11,6 +11,7 @@ import Catalogos from './components/catalogos/Catalogos';
 import Categorias from './components/catalogos/Categorias';
 import Marcas from './components/catalogos/Marcas';
 import Productos from './components/catalogos/Productos';
+import Clientes from './components/clientes/Cliente';
 
 const ProtectedRoute = ({children}) => {
     const {user} = useAuth();
@@ -61,8 +62,11 @@ const router = createBrowserRouter([
             {
                 path: 'productos',
                 element:<Productos/>
+            },
+            {
+                path: 'clientes',
+                element:<Clientes/>
             }
-    
         ]
     }
 ]);
