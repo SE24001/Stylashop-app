@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import { urlBase } from "../utils/config";
 
 // Verifica si un token JWT ha expirado
 const isTokenExpired = (token) => {
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }) => {
           user: {
             userId: decoded.userId,
             nombre: decoded.nombre,
+            username: decoded.username || decoded.sub,
             correo,
             role,
           },
@@ -47,8 +50,25 @@ export const AuthProvider = ({ children }) => {
 
   const [authState, setAuthState] = useState(initialState);
   const [isAuthenticated, setIsAuthenticated] = useState(!!initialState.token);
+  const [loading, setLoading] = useState(false);
 
-  const login = (token) => {
+  // Función para obtener datos actualizados del usuario
+  const fetchUserData = async (token) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${urlBase}auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener datos del usuario:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const login = async (token) => {
     try {
       const decoded = jwtDecode(token);
       const correo =
@@ -59,12 +79,19 @@ export const AuthProvider = ({ children }) => {
         decoded.authorities?.[0] ||
         null;
 
-      const user = {
+      let user = {
         userId: decoded.userId,
         nombre: decoded.nombre,
+        username: decoded.username || decoded.sub,
         correo,
         role,
       };
+
+      // Intentar obtener datos más completos del backend
+      const userData = await fetchUserData(token);
+      if (userData) {
+        user = { ...user, ...userData };
+      }
 
       localStorage.setItem("token", token);
       setAuthState({ token, user, role });
@@ -72,6 +99,19 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("error", err);
       throw new Error("Token inválido");
+    }
+  };
+
+  // Función para refrescar datos del usuario
+  const refreshUserData = async () => {
+    if (authState.token && !isTokenExpired(authState.token)) {
+      const userData = await fetchUserData(authState.token);
+      if (userData) {
+        setAuthState(prev => ({
+          ...prev,
+          user: { ...prev.user, ...userData }
+        }));
+      }
     }
   };
 
@@ -93,8 +133,10 @@ export const AuthProvider = ({ children }) => {
       value={{
         ...authState, // contiene token, user y role
         isAuthenticated,
+        loading,
         login,
         logout,
+        refreshUserData,
       }}
     >
       {children}

@@ -15,6 +15,9 @@ import Clientes from './components/clientes/Cliente';
 import Reportes from './components/reportes/Reportes';
 import ReporteIngresos from './components/reportes/ReporteIngresos';
 
+import VentasPage from './components/ventas/VentasPage';
+
+
 const ProtectedRoute = ({children}) => {
     const {user} = useAuth();
     if(!user){
@@ -70,12 +73,16 @@ const router = createBrowserRouter([
                 element:<Clientes/>
             },
             {
+
                 path: 'reportes',
                 element:<Reportes/>
             },
             {
                 path: 'reportes/reporte-ingresos',
                 element:<ReporteIngresos/>
+
+                path: 'ventas',
+                element:<VentasPage/>
             }
         ]
     }
