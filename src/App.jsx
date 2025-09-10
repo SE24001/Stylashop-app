@@ -12,6 +12,7 @@ import Categorias from './components/catalogos/Categorias';
 import Marcas from './components/catalogos/Marcas';
 import Productos from './components/catalogos/Productos';
 import Clientes from './components/clientes/Cliente';
+import VentasPage from './components/ventas/VentasPage';
 
 const ProtectedRoute = ({children}) => {
     const {user} = useAuth();
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
             {
                 path: 'clientes',
                 element:<Clientes/>
+            },
+            {
+                path: 'ventas',
+                element:<VentasPage/>
             }
         ]
     }

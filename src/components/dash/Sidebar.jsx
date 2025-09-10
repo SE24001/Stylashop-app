@@ -66,16 +66,16 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
             </li>
           )}
 
-          
-          {(user?.role === "ADMIN" || user?.role === "REGISTRO" || user?.role === "COLECTOR") && (
+
+          {(user?.role === "ADMIN" || user?.role === "CAJERO" || user?.role === "VENDEDOR") && (
             <li>
               <Link
-                to="/ordenes"
+                to="/ventas"
                 className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
                 onClick={handleMenuClick}
               >
                 <FaBorderStyle className="mr-2" />
-                Gestión Ordenes
+                Ventas
               </Link>
             </li>
           )}
