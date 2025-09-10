@@ -43,7 +43,14 @@ export const getVentas = async (token) => {
 
 //Funcion para crear un pago
 export const createPago = async (dto, token) => {
-    const response = await axios.post(`${urlBase}pagos`, dto, buildHeaders(token));
+    // Convertir el DTO del frontend al formato que espera el backend
+    const pagoEntity = {
+        fechaPago: dto.fechaPago,
+        monto: dto.monto,
+        metodoPago: dto.metodoPago,
+        venta: dto.ventaDTO // El backend espera 'venta' no 'ventaDTO'
+    };
+    const response = await axios.post(`${urlBase}pagos`, pagoEntity, buildHeaders(token));
     return response.data;           
 }
 

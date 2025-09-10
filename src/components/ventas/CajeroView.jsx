@@ -24,6 +24,7 @@ export default function CajeroView() {
   };
 
   const cobrarVenta = async (venta) => {
+    // Primero preguntar el método de pago
     const { value: metodo } = await Swal.fire({
       title: "Método de Pago",
       input: "select",
@@ -34,29 +35,106 @@ export default function CajeroView() {
       },
       inputPlaceholder: "Selecciona un método",
       showCancelButton: true,
-      confirmButtonText: "Procesar Pago",
+      confirmButtonText: "Continuar",
       cancelButtonText: "Cancelar"
     });
 
     if (!metodo) return;
 
+    let montoRecibido = venta.total;
+    let cambio = 0;
+
+    // Si es efectivo, preguntar cuánto recibió
+    if (metodo === "EFECTIVO") {
+      const { value: recibido } = await Swal.fire({
+        title: "Cobrar Venta",
+        html: `
+          <div style="margin-bottom: 10px;">
+            <strong>Total a pagar: $${venta.total}</strong>
+          </div>
+          <input id="monto-recibido" type="number" step="0.01" min="${venta.total}" 
+                 placeholder="Ingrese el monto recibido" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <div id="cambio-info" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Procesar Pago",
+        cancelButtonText: "Cancelar",
+        didOpen: () => {
+          const input = document.getElementById('monto-recibido');
+          const cambioDiv = document.getElementById('cambio-info');
+          
+          input.addEventListener('input', () => {
+            const valor = parseFloat(input.value) || 0;
+            if (valor >= venta.total) {
+              const cambioCalculado = (valor - venta.total).toFixed(2);
+              cambioDiv.innerHTML = `<strong>Cambio: $${cambioCalculado}</strong>`;
+              cambioDiv.style.color = '#28a745';
+            } else {
+              cambioDiv.innerHTML = 'El monto debe ser mayor o igual al total';
+              cambioDiv.style.color = '#dc3545';
+            }
+          });
+        },
+        preConfirm: () => {
+          const valor = parseFloat(document.getElementById('monto-recibido').value);
+          if (!valor || valor < venta.total) {
+            Swal.showValidationMessage(`El monto debe ser al menos $${venta.total}`);
+            return false;
+          }
+          return valor;
+        }
+      });
+
+      if (!recibido) return;
+      
+      montoRecibido = parseFloat(recibido);
+      cambio = (montoRecibido - venta.total).toFixed(2);
+
+      // Mostrar confirmación del cambio si hay
+      if (cambio > 0) {
+        const confirmar = await Swal.fire({
+          title: "Confirmar Pago",
+          html: `
+            <div><strong>Total venta:</strong> $${venta.total}</div>
+            <div><strong>Monto recibido:</strong> $${montoRecibido}</div>
+            <div style="color: #28a745; font-size: 18px; margin-top: 10px;">
+              <strong>Cambio: $${cambio}</strong>
+            </div>
+          `,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar"
+        });
+
+        if (!confirmar.isConfirmed) return;
+      }
+    }
+
     const pago = {
       fechaPago: new Date().toISOString().split("T")[0],
       ventaDTO: { id: venta.id },
-      monto: venta.total,
+      monto: venta.total, // Solo el valor de la venta, no el recibido
       metodoPago: metodo,
     };
 
     try {
-      // Crear el pago
       await createPago(pago, token);
-
-      // Actualizar estado de la venta
       const ventaActualizada = { ...venta, estado: "PAGADA" };
       await updateVenta(venta.id, ventaActualizada, token);
 
-      Swal.fire("Éxito", "Venta cobrada correctamente", "success");
-      fetchVentas(); // Refrescar la lista
+      // Mostrar mensaje de éxito con el cambio si aplica
+      const mensaje = cambio > 0 
+        ? `Venta cobrada correctamente.<br><strong style="color: #28a745;">Cambio: $${cambio}</strong>`
+        : "Venta cobrada correctamente";
+
+      Swal.fire({
+        title: "Éxito",
+        html: mensaje,
+        icon: "success"
+      });
+      
+      fetchVentas();
     } catch (error) {
       console.error("Error al procesar pago:", error);
       const mensaje = error.response?.data?.message || "No se pudo registrar el pago";
