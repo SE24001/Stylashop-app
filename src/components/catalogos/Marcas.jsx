@@ -81,6 +81,19 @@ export default function Marcas() {
         setSubmitted(true);
 
         if (marca.nombre.trim()) {
+            // Validar que no exista una marca con el mismo nombre (ignorando mayúsculas y espacios)
+            const nombreNormalizado = marca.nombre.trim().toLowerCase();
+            const existe = marcas && marcas.some(m => m.nombre.trim().toLowerCase() === nombreNormalizado && m.id !== marca.id);
+            if (existe) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Duplicado',
+                    detail: 'Ya existe una marca con ese nombre.',
+                    life: 3000,
+                });
+                return;
+            }
+
             let _marcas = [...marcas];
             let _marca = { ...marca };
 
