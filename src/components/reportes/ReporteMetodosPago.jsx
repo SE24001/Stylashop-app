@@ -6,17 +6,15 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { RadioButton } from "primereact/radiobutton";
 import { useNavigate } from "react-router-dom";
 import { urlBase } from "../utils/config";
 import Swal from "sweetalert2";
 
-const ReporteIngresos = () => {
+const ReporteMetodosPago = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFinal, setFechaFinal] = useState(null);
-  const [detallado, setDetallado] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const verReportePdf = async () => {
@@ -32,8 +30,7 @@ const ReporteIngresos = () => {
     const inicio = fechaInicio.toISOString().split("T")[0]; // yyyy-MM-dd
     const fin = fechaFinal.toISOString().split("T")[0];     // yyyy-MM-dd
 
-    const endpoint = `${urlBase}reportes/ventas?fechaInicio=${inicio}&fechaFinal=${fin}&detallado=${detallado}`;
-
+    const endpoint = `${urlBase}reportes/metodos-pago?fechaInicio=${inicio}&fechaFinal=${fin}`;
 
     try {
       setLoading(true);
@@ -70,7 +67,7 @@ const ReporteIngresos = () => {
       </div>
 
       <div className="p-6 max-w-5xl mx-auto">
-        <Card title="Reporte de Ingresos" className="shadow-xl rounded-2xl">
+        <Card title="Reporte de Métodos de Pago" className="shadow-xl rounded-2xl">
           {/* Filtros */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
             <div>
@@ -97,30 +94,6 @@ const ReporteIngresos = () => {
             </div>
           </div>
 
-          {/* Selector de tipo reporte */}
-          <div className="flex gap-6 p-4">
-            <div className="flex items-center">
-              <RadioButton
-                inputId="detallado"
-                name="tipo"
-                value={true}
-                onChange={(e) => setDetallado(e.value)}
-                checked={detallado === true}
-              />
-              <label htmlFor="detallado" className="ml-2">Detallado</label>
-            </div>
-            <div className="flex items-center">
-              <RadioButton
-                inputId="resumido"
-                name="tipo"
-                value={false}
-                onChange={(e) => setDetallado(e.value)}
-                checked={detallado === false}
-              />
-              <label htmlFor="resumido" className="ml-2">Resumido</label>
-            </div>
-          </div>
-
           {/* Botón generar */}
           <div className="flex flex-wrap gap-3 justify-end p-4">
             <Button
@@ -144,4 +117,4 @@ const ReporteIngresos = () => {
   );
 };
 
-export default ReporteIngresos;
+export default ReporteMetodosPago;

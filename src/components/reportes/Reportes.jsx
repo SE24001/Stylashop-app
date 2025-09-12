@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { FaCreditCard } from "react-icons/fa";
 import { FaCashRegister } from "react-icons/fa";
 
 const reportes = [
@@ -8,6 +8,12 @@ const reportes = [
         icon: <FaCashRegister />,
         ruta: '/reportes/reporte-ingresos',
         color: 'blue-600'
+    },
+    {
+        titulo: 'Métodos de Pago',
+        icon: <FaCreditCard />,
+        ruta: '/reportes/metodos-pago',
+        color: 'green-600'
     }
    
 ];

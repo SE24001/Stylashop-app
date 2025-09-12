@@ -27,7 +27,7 @@ const Login = () => {
 
       if (status === 200 && data?.token) {
         // El contexto decodifica el token por dentro
-        login(data.token);
+        await login(data.token);
         navigate("/dashboard");
       } else {
         setError("Respuesta inesperada del servidor.");
