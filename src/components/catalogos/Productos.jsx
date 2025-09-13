@@ -258,7 +258,7 @@ export default function Productos() {
       <h4 className="m-0">Gestión de Productos</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." className="pl-8" />
       </span>
     </div>
   );

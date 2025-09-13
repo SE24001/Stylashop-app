@@ -43,19 +43,48 @@ export const getVentas = async (token) => {
 
 //Funcion para crear un pago
 export const createPago = async (dto, token) => {
-    // Convertir el DTO del frontend al formato que espera el backend
-    const pagoEntity = {
+    // Estructura que coincida con la entidad Pago del backend
+    const pagoData = {
         fechaPago: dto.fechaPago,
         monto: dto.monto,
         metodoPago: dto.metodoPago,
-        venta: dto.ventaDTO // El backend espera 'venta' no 'ventaDTO'
+        venta: { id: dto.ventaDTO.id } // Solo enviamos el ID de la venta
     };
-    const response = await axios.post(`${urlBase}pagos`, pagoEntity, buildHeaders(token));
+    
+    console.log("Datos del pago enviados al backend:", pagoData);
+    
+    const response = await axios.post(`${urlBase}pagos`, pagoData, buildHeaders(token));
     return response.data;           
 }
 
 //Funcion para actualizar una venta
 export const updateVenta = async (id, dto, token) => {
     const response = await axios.put(`${urlBase}ventas/${id}`, dto, buildHeaders(token));
+    return response.data;           
+}
+
+//Funciones para gestión de usuarios
+export const getUsuarios = async (token) => {
+    const response = await axios.get(`${urlBase}usuarios`, buildHeaders(token));
+    return response.data;           
+}
+
+export const getRoles = async (token) => {
+    const response = await axios.get(`${urlBase}usuarios/roles`, buildHeaders(token));
+    return response.data;           
+}
+
+export const createUsuario = async (dto, token) => {
+    const response = await axios.post(`${urlBase}auth/register`, dto, buildHeaders(token));
+    return response.data;           
+}
+
+export const updateUsuario = async (id, dto, token) => {
+    const response = await axios.put(`${urlBase}usuarios/${id}`, dto, buildHeaders(token));
+    return response.data;           
+}
+
+export const deleteUsuario = async (id, token) => {
+    const response = await axios.delete(`${urlBase}usuarios/${id}`, buildHeaders(token));
     return response.data;           
 }
