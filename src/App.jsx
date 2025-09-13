@@ -15,6 +15,7 @@ import Clientes from './components/clientes/Cliente';
 import Reportes from './components/reportes/Reportes';
 import ReporteIngresos from './components/reportes/ReporteIngresos';
 import ReporteMetodosPago from './components/reportes/ReporteMetodosPago';
+import Usuarios from './components/gestion/Usuarios';
 
 import VentasPage from './components/ventas/VentasPage';
 
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
             {
                 path: 'ventas',
                 element:<VentasPage/>
+            },
+            {
+                path: 'usuarios',
+                element:<Usuarios/> 
             }
         ]
     }
