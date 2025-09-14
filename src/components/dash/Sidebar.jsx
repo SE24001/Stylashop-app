@@ -3,11 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const menuItems = [
-  { to: "/dashboard", icon: <FaHome />, label: "Inicio" },
-  { to: "/catalogos", icon: <FaList />, label: "Catálogos" },
-  { to: "/clientes", icon: <FaUserFriends />, label: "Clientes" },
-  { to: "/ventas", icon: <FaBoxOpen />, label: "Ventas" },
-  { to: "/reportes", icon: <FaChartBar />, label: "Reportes" },
+  { to: "/dashboard", icon: <FaHome />, label: "Inicio", roles: [] }, // Acceso para todos
+  { to: "/catalogos", icon: <FaList />, label: "Catálogos", roles: ["ADMIN"] },
+  { to: "/clientes", icon: <FaUserFriends />, label: "Clientes", roles: ["ADMIN", "MESERO/A"] },
+  { to: "/ventas", icon: <FaBoxOpen />, label: "Ventas", roles: ["ADMIN", "CAJERO", "VENDEDOR"] },
+  { to: "/reportes", icon: <FaChartBar />, label: "Reportes", roles: ["ADMIN"] },
+  { to: "/usuarios", icon: <FaUserFriends />, label: "Gestión Usuarios", roles: ["ADMIN"] },
 ];
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
@@ -19,6 +20,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       closeSidebar();
     }
   };
+
+  // Filtrar elementos del menú según el rol del usuario
+  const filteredMenuItems = menuItems.filter(item => {
+    // Si no tiene roles definidos, es accesible para todos
+    if (item.roles.length === 0) return true;
+    // Si el usuario tiene uno de los roles requeridos
+    return item.roles.includes(user?.role);
+  });
 
   return (
     <aside
@@ -47,7 +56,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       </div>
       {/* Menú de navegación */}
       <nav className="flex-1 px-2 py-4 overflow-y-auto">
-        {menuItems.map((item) => (
+        {filteredMenuItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
