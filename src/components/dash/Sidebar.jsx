@@ -1,9 +1,18 @@
-import { FaHome, FaTachometerAlt, FaRegFilePdf,FaCog, FaUserFriends, FaClipboard, FaList, FaDollarSign, FaShopify, FaCheck, FaChartBar, FaSearch, FaBorderStyle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { FaHome, FaList, FaUserFriends, FaBoxOpen, FaChartBar } from 'react-icons/fa';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const menuItems = [
+  { to: "/dashboard", icon: <FaHome />, label: "Inicio" },
+  { to: "/catalogos", icon: <FaList />, label: "Catálogos" },
+  { to: "/clientes", icon: <FaUserFriends />, label: "Clientes" },
+  { to: "/ventas", icon: <FaBoxOpen />, label: "Ventas" },
+  { to: "/reportes", icon: <FaChartBar />, label: "Reportes" },
+];
+
 const Sidebar = ({ isOpen, closeSidebar }) => {
-  const { user } = useAuth();
+  const { user, loading, logout } = useAuth();
+  const location = useLocation();
 
   const handleMenuClick = () => {
     if (window.innerWidth < 1024) {
@@ -13,103 +22,46 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   return (
     <aside
-      className={`bg-blue-700 text-white w-64 fixed top-16 left-0 h-[calc(100%-4rem)] z-50 transform transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'
-        } flex flex-col`}
+      className={`fixed top-16 left-0 h-[calc(100%-4rem)] w-64 bg-white shadow-lg border-r flex flex-col z-50 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
-      {/* Logo */}
-      <div className="p-4 bg-blue-800 text-center">
+      <div className="p-6 flex flex-col items-center">
         <img
           src="/images/logo.jpeg"
           alt="Logo"
-          className="w-24 h-24 mx-auto mb-2 rounded-full"
+          className="w-16 h-16 rounded-full mb-2 shadow"
         />
-        <h2 className="text-xl font-bold">Style Shop -APP</h2>
+        <h2 className="text-xl font-bold text-gray-800">StylaShop</h2>
+        <span className="text-gray-500 text-sm">Panel de Administración</span>
+        {/* Usuario y cerrar sesión solo en móviles/tablets */}
+        <div className="flex flex-col items-center mt-4 w-full md:hidden">
+          <div className="text-base font-semibold text-black mb-2">
+            <b>Usuario:</b> {loading ? "Cargando..." : (user?.username || user?.nombre || 'Sin nombre')}
+          </div>
+          <button
+            onClick={logout}
+            className="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-700 text-base font-bold transition-colors w-full"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
       </div>
-
-      {/* Menú */}
-      <nav className="mt-4 flex-1 overflow-y-auto">
-        <ul>
-          <li>
-            <Link
-              to="/dashboard"
-              className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
-              onClick={handleMenuClick}
-            >
-              <FaHome className="mr-2" />
-              Inicio
-            </Link>
-          </li>
-          
-          {(user?.role === "ADMIN") && (
-            <li>
-              <Link
-                to="/catalogos"
-                className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
-                onClick={handleMenuClick}
-              >
-                <FaList className="mr-2" />
-                Catálogos
-              </Link>
-            </li>
-          )}
-
-          {(user?.role === "ADMIN" || user?.role === "MESERO/A") && (
-            <li>
-              <Link
-                to="/clientes"
-                className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
-                onClick={handleMenuClick}
-              >
-                <FaUserFriends className="mr-2" />
-                Clientes
-              </Link>
-            </li>
-          )}
-
-
-          {(user?.role === "ADMIN" || user?.role === "CAJERO" || user?.role === "VENDEDOR") && (
-            <li>
-              <Link
-                to="/ventas"
-                className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
-                onClick={handleMenuClick}
-              >
-                <FaBorderStyle className="mr-2" />
-                Ventas
-              </Link>
-            </li>
-          )}
-
-          
-          {user?.role === "ADMIN" && (
-            <li>
-              <Link
-                to="/reportes"
-                className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
-                onClick={handleMenuClick}
-              >
-                <FaChartBar className="mr-2" />
-                Reportes
-              </Link>
-            </li>
-          )}
-
-          {user?.role === "ADMIN" && (
-            <li>
-              <Link
-                to="/usuarios"
-                className="p-4 hover:bg-blue-800 cursor-pointer flex items-center"
-                onClick={handleMenuClick}
-              >
-                <FaUserFriends className="mr-2" />
-                Gestión Usuarios
-              </Link>
-            </li>
-          )}
-        </ul>
+      {/* Menú de navegación */}
+      <nav className="flex-1 px-2 py-4 overflow-y-auto">
+        {menuItems.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className={`flex items-center px-4 py-2 my-2 rounded-lg transition-colors duration-200 hover:bg-gray-200 text-gray-700 font-medium ${location.pathname === item.to ? "bg-gray-100" : ""}`}
+            onClick={handleMenuClick}
+          >
+            <span className="mr-3 text-lg">{item.icon}</span>
+            {item.label}
+          </Link>
+        ))}
       </nav>
     </aside>
+
   );
-};
+}
 
 export default Sidebar;

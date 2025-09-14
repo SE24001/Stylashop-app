@@ -1,22 +1,21 @@
 import React, { useState } from "react";
+import { IMAGES_URL } from "../utils/config";
 
 export default function MenuCard({ producto, onAdd, onRemove, cantidad = 0 }) {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-  
-  // Construir URL de imagen con validaciones
+
+  // Construir URL de imagen con validaciones usando IMAGES_URL
   const getImageUrl = () => {
     if (!producto.imagenUrl || imageError) {
       return '/images/placeholder-product.jpg';
     }
-    
     // Limpiar la URL de espacios o caracteres extraños
-    const cleanImageUrl = producto.imagenUrl.trim();
-    return `http://localhost:8080/uploads/productos/${cleanImageUrl}`;
+    const cleanImageUrl = producto.imagenUrl.trim().replace(/^\/+/, "");
+    return `${IMAGES_URL}${cleanImageUrl}`;
   };
 
   const handleImageError = () => {
-    console.log(`Error cargando imagen para ${producto.nombre}:`, producto.imagenUrl);
     setImageError(true);
     setImageLoading(false);
   };

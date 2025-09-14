@@ -191,18 +191,23 @@ export default function Clientes() {
   );
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto py-6 px-2 sm:px-4 md:px-8 lg:px-4">
       <Toast ref={toast} />
-      <div className="card">
-        <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate} />
-
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 font-serif">Clientes</h1>
+  <div className="bg-white rounded-xl shadow p-4 sm:p-8 flex flex-col items-center mb-8 w-full">
+        <span className="text-5xl mb-4">🧑‍🤝‍🧑</span>
+        <span className="font-bold text-lg text-gray-700 mb-2">Clientes</span>
+        <span className="text-gray-500 text-center mb-4">Administra los clientes registrados en tu tienda.</span>
+        <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-6 py-3 rounded-lg shadow transition-colors mb-4" onClick={openNew}>Nuevo Cliente</button>
+      </div>
+  <div className="bg-white rounded-xl shadow p-2 sm:p-6 w-full overflow-x-auto">
         <DataTable
           ref={dt}
           value={clientes}
           dataKey="id"
           paginator
           rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
           globalFilter={globalFilter}
@@ -215,8 +220,7 @@ export default function Clientes() {
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }} />
         </DataTable>
       </div>
-
-      {/* Crear/Editar */}
+      {/* Crear/Editar Modal */}
       <Dialog
         visible={dialog}
         style={{ width: '30rem' }}
@@ -226,51 +230,57 @@ export default function Clientes() {
         footer={clienteDialogFooter}
         onHide={hideDialog}
       >
-        <div className="field">
-          <label htmlFor="nombre" className="font-bold">Nombre</label>
-          <InputText
-            id="nombre"
-            value={cliente.nombre}
-            onChange={(e) => onInputChange(e, 'nombre')}
-            required
-            autoFocus
-            className={classNames({ 'p-invalid': submitted && !cliente.nombre })}
-          />
-          {submitted && !cliente.nombre.trim() && <small className="p-error">El nombre es requerido.</small>}
-        </div>
-
-        <div className="field">
-          <label htmlFor="email" className="font-bold">Email</label>
-          <InputText
-            id="email"
-            value={cliente.email}
-            onChange={(e) => onInputChange(e, 'email')}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="telefono" className="font-bold">Teléfono</label>
-          <InputText
-            id="telefono"
-            value={cliente.telefono}
-            onChange={(e) => onInputChange(e, 'telefono')}
-          />
-        </div>
-
-        <div className="field">
-          <label className="font-bold">Tipo Cliente</label>
-          <Dropdown
-            value={cliente.tipoCliente}
-            onChange={(e) => setCliente({ ...cliente, tipoCliente: e.value })}
-            options={tipoClienteOptions}
-            placeholder="Seleccione un tipo"
-            className={classNames('w-full md:w-14rem', { 'p-invalid': submitted && !cliente.tipoCliente })}
-          />
-          {submitted && !cliente.tipoCliente && <small className="p-error">El tipo de cliente es requerido.</small>}
+        <div className="bg-gray-50 rounded-xl p-2 sm:p-4 w-full">
+          <div className="flex flex-col sm:flex-row items-center mb-6 gap-2 sm:gap-6">
+            <span className="text-3xl mr-2">🧑‍🤝‍🧑</span>
+            <span className="font-bold text-lg text-gray-700">{cliente.id ? 'Editar Cliente' : 'Nuevo Cliente'}</span>
+          </div>
+          <div className="space-y-4">
+            <div className="field w-full">
+              <label htmlFor="nombre" className="font-bold">Nombre</label>
+              <InputText
+                id="nombre"
+                value={cliente.nombre}
+                onChange={(e) => onInputChange(e, 'nombre')}
+                required
+                autoFocus
+                className={classNames({ 'p-invalid': submitted && !cliente.nombre }) + ' rounded-lg border-gray-300 w-full'}
+              />
+              {submitted && !cliente.nombre.trim() && <small className="p-error">El nombre es requerido.</small>}
+            </div>
+            <div className="field w-full">
+              <label htmlFor="email" className="font-bold">Email</label>
+              <InputText
+                id="email"
+                value={cliente.email}
+                onChange={(e) => onInputChange(e, 'email')}
+                className="rounded-lg border-gray-300 w-full"
+              />
+            </div>
+            <div className="field w-full">
+              <label htmlFor="telefono" className="font-bold">Teléfono</label>
+              <InputText
+                id="telefono"
+                value={cliente.telefono}
+                onChange={(e) => onInputChange(e, 'telefono')}
+                className="rounded-lg border-gray-300 w-full"
+              />
+            </div>
+            <div className="field w-full">
+              <label className="font-bold">Tipo Cliente</label>
+              <Dropdown
+                value={cliente.tipoCliente}
+                onChange={(e) => setCliente({ ...cliente, tipoCliente: e.value })}
+                options={tipoClienteOptions}
+                placeholder="Seleccione un tipo"
+                className={classNames('w-full md:w-14rem rounded-lg border-gray-300', { 'p-invalid': submitted && !cliente.tipoCliente })}
+              />
+              {submitted && !cliente.tipoCliente && <small className="p-error">El tipo de cliente es requerido.</small>}
+            </div>
+          </div>
         </div>
       </Dialog>
-
-      {/* Eliminar */}
+      {/* Eliminar Modal */}
       <Dialog
         visible={deleteDialog}
         style={{ width: '28rem' }}
@@ -279,13 +289,9 @@ export default function Clientes() {
         footer={deleteClienteDialogFooter}
         onHide={hideDeleteDialog}
       >
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {cliente && (
-            <span>
-              ¿Seguro de eliminar al cliente <b>{cliente.nombre}</b>?
-            </span>
-          )}
+        <div className="bg-gray-50 rounded-xl p-4 sm:p-6 flex flex-col items-center w-full">
+          <span className="text-4xl mb-2 text-yellow-500">⚠️</span>
+          <span className="font-bold text-lg text-gray-700 mb-2 text-center">¿Seguro de eliminar al cliente <b>{cliente.nombre}</b>?</span>
         </div>
       </Dialog>
     </div>

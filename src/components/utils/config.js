@@ -1,3 +1,3 @@
-export const urlBase = 'http://localhost:8080/api/';
+export const urlBase = 'http://localhost:8083/api/';
 
-export const IMAGES_URL = 'http://localhost:8080/uploads/productos/';
+export const IMAGES_URL = 'http://localhost:8083/uploads/productos/';
