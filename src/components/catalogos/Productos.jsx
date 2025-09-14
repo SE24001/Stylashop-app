@@ -258,7 +258,7 @@ export default function Productos() {
       <h4 className="m-0">Gestión de Productos</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." className="pl-8" />
+        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
       </span>
     </div>
   );
@@ -278,22 +278,35 @@ export default function Productos() {
   );
 
   return (
-    <div>
+  <div className="max-w-4xl mx-auto py-6 px-2 sm:px-4 md:px-8 lg:px-4">
       <Toast ref={toast} />
-      <div className="card">
-        <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate} />
-
+      <button
+        className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 font-semibold px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 shadow"
+        onClick={() => window.history.back()}
+      >
+        <span className="pi pi-arrow-left" />
+        <span>Regresar</span>
+      </button>
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 font-serif">Productos</h1>
+  <div className="bg-white rounded-xl shadow p-4 sm:p-8 flex flex-col items-center mb-8 w-full">
+        <span className="text-5xl mb-4">👗</span>
+        <span className="font-bold text-lg text-gray-700 mb-2">Productos</span>
+        <span className="text-gray-500 text-center mb-4">Gestiona tu catálogo de moda.</span>
+        <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-6 py-3 rounded-lg shadow transition-colors mb-4" onClick={openNew}>Nuevo Producto</button>
+      </div>
+  <div className="bg-white rounded-xl shadow p-2 sm:p-6 w-full overflow-x-auto">
         <DataTable
           ref={dt}
           value={productos}
           dataKey="id"
           paginator
           rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos"
           globalFilter={globalFilter}
           header={header}
+          // ...existing code...
         >
           <Column field="nombre" header="Nombre" sortable style={{ minWidth: '16rem' }} />
           <Column field="descripcion" header="Descripción" style={{ minWidth: '16rem' }} />
@@ -304,124 +317,125 @@ export default function Productos() {
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }} />
         </DataTable>
       </div>
-
-      {/* Crear / Editar */}
+      {/* Crear / Editar Modal */}
       <Dialog
         visible={dialog}
-        style={{ width: '32rem' }}
+        style={{ width: '28rem' }}
         header={producto.id ? 'Actualizar Producto' : 'Nuevo Producto'}
         modal
         className="p-fluid"
         footer={productoDialogFooter}
         onHide={hideDialog}
       >
-        <div className="field">
-          <label htmlFor="nombre" className="font-bold">Nombre</label>
-          <InputText
-            id="nombre"
-            value={producto.nombre}
-            onChange={(e) => onInputChange(e, 'nombre')}
-            required
-            autoFocus
-            className={classNames({ 'p-invalid': submitted && !producto.nombre })}
-          />
-          {submitted && !producto.nombre?.trim() && <small className="p-error">El nombre es requerido.</small>}
-        </div>
-
-        <div className="field">
-          <label htmlFor="descripcion" className="font-bold">Descripción</label>
-          <InputTextarea
-            id="descripcion"
-            value={producto.descripcion}
-            onChange={(e) => onInputChange(e, 'descripcion')}
-            rows={3}
-            cols={20}
-          />
-        </div>
-
-        <div className="formgrid grid">
-          <div className="field col">
-            <label className="font-bold">Marca</label>
-            <Dropdown
-              value={producto.marcaDTO}
-              onChange={(e) => setProducto({ ...producto, marcaDTO: e.value })}
-              options={marcas}
-              optionLabel="nombre"
-              placeholder="Seleccione una marca"
-              className="w-full md:w-14rem"
-            />
+        <div className="bg-gray-50 rounded-xl p-2 sm:p-4 w-full">
+          <div className="flex flex-col sm:flex-row items-center mb-6 gap-2 sm:gap-6">
+            <span className="text-3xl mr-2">👗</span>
+            <span className="font-bold text-lg text-gray-700">{producto.id ? 'Editar Producto' : 'Nuevo Producto'}</span>
           </div>
-          <div className="field col">
-            <label className="font-bold">Categoría</label>
-            <Dropdown
-              value={producto.categoriaDTO}
-              onChange={(e) => setProducto({ ...producto, categoriaDTO: e.value })}
-              options={categorias}
-              optionLabel="nombre"
-              placeholder="Seleccione una categoría"
-              className="w-full md:w-14rem"
-            />
-          </div>
-        </div>
-
-        <div className="field">
-          <label htmlFor="precio" className="font-bold">Precio</label>
-          <InputNumber
-            id="precio"
-            value={producto.precioUnitario}
-            onValueChange={(e) => onInputNumberChange(e, 'precioUnitario')}
-            mode="currency"
-            currency="USD"
-            locale="en-US"
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="imagen" className="font-bold">Imagen</label>
-          {!preview ? (
-            <FileUpload
-              mode="basic"
-              accept="image/*"
-              maxFileSize={1000000}
-              customUpload
-              uploadHandler={onUpload}
-              chooseLabel="Seleccionar"
-            />
-          ) : (
-            <div className="flex flex-col items-center">
-              <img
-                src={preview}
-                alt="preview"
-                className="w-40 h-40 object-cover rounded-lg shadow-md mb-2"
+          <div className="space-y-4">
+            <div className="field w-full">
+              <label htmlFor="nombre" className="font-bold">Nombre</label>
+              <InputText
+                id="nombre"
+                value={producto.nombre}
+                onChange={(e) => onInputChange(e, 'nombre')}
+                required
+                autoFocus
+                className={classNames({ 'p-invalid': submitted && !producto.nombre }) + ' rounded-lg border-gray-300 w-full'}
               />
-              <Button
-                type="button"
-                label="Quitar Imagen"
-                icon="pi pi-times"
-                severity="danger"
-                onClick={removeImage}
+              {submitted && !producto.nombre?.trim() && <small className="p-error">El nombre es requerido.</small>}
+            </div>
+            <div className="field w-full">
+              <label htmlFor="descripcion" className="font-bold">Descripción</label>
+              <InputTextarea
+                id="descripcion"
+                value={producto.descripcion}
+                onChange={(e) => onInputChange(e, 'descripcion')}
+                rows={3}
+                cols={20}
+                className="rounded-lg border-gray-300 w-full"
               />
             </div>
-          )}
+            <div className="formgrid grid gap-4">
+              <div className="field col w-full">
+                <label className="font-bold">Marca</label>
+                <Dropdown
+                  value={producto.marcaDTO}
+                  onChange={(e) => setProducto({ ...producto, marcaDTO: e.value })}
+                  options={marcas}
+                  optionLabel="nombre"
+                  placeholder="Seleccione una marca"
+                  className="w-full md:w-14rem rounded-lg border-gray-300"
+                />
+              </div>
+              <div className="field col w-full">
+                <label className="font-bold">Categoría</label>
+                <Dropdown
+                  value={producto.categoriaDTO}
+                  onChange={(e) => setProducto({ ...producto, categoriaDTO: e.value })}
+                  options={categorias}
+                  optionLabel="nombre"
+                  placeholder="Seleccione una categoría"
+                  className="w-full md:w-14rem rounded-lg border-gray-300"
+                />
+              </div>
+            </div>
+            <div className="field w-full">
+              <label htmlFor="precio" className="font-bold">Precio</label>
+              <InputNumber
+                id="precio"
+                value={producto.precioUnitario}
+                onValueChange={(e) => onInputNumberChange(e, 'precioUnitario')}
+                mode="currency"
+                currency="USD"
+                locale="en-US"
+                className="rounded-lg border-gray-300 w-full"
+              />
+            </div>
+            <div className="field w-full">
+              <label htmlFor="imagen" className="font-bold">Imagen</label>
+              {!preview ? (
+                <FileUpload
+                  mode="basic"
+                  accept="image/*"
+                  maxFileSize={1000000}
+                  customUpload
+                  uploadHandler={onUpload}
+                  chooseLabel="Seleccionar"
+                  className="rounded-lg border-gray-300 w-full"
+                />
+              ) : (
+                <div className="flex flex-col items-center">
+                  <img
+                    src={preview}
+                    alt="preview"
+                    className="w-40 h-40 object-cover rounded-lg shadow-md mb-2 border border-gray-200"
+                  />
+                  <Button
+                    type="button"
+                    label="Quitar Imagen"
+                    icon="pi pi-times"
+                    severity="danger"
+                    onClick={removeImage}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </Dialog>
-
-      {/* Eliminar */}
+      {/* Eliminar Modal */}
       <Dialog
         visible={deleteDialog}
-        style={{ width: '32rem' }}
+        style={{ width: '24rem' }}
         header="Confirmación"
         modal
         footer={deleteProductoDialogFooter}
         onHide={hideDeleteDialog}
       >
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {producto && (
-            <span>
-              ¿Seguro de eliminar el producto <b>{producto.nombre}</b>?
-            </span>
-          )}
+        <div className="bg-gray-50 rounded-xl p-4 sm:p-6 flex flex-col items-center w-full">
+          <span className="text-4xl mb-2 text-yellow-500">⚠️</span>
+          <span className="font-bold text-lg text-gray-700 mb-2 text-center">¿Seguro de eliminar el producto <b>{producto.nombre}</b>?</span>
         </div>
       </Dialog>
     </div>

@@ -1,40 +1,30 @@
-import { Link } from "react-router-dom";
-import { MdCategory, MdLocalOffer } from "react-icons/md";
-import { IoCube } from "react-icons/io5";
-import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const catalogItems = [
-  { id: 1, name: "Categorías", icon: MdCategory, path: "/categorias", color: "bg-blue-500" },
-  { id: 2, name: "Marcas",     icon: MdLocalOffer, path: "/marcas",     color: "bg-purple-500" },
-  { id: 3, name: "Productos",  icon: IoCube,       path: "/productos",  color: "bg-green-500" },
+const catalogos = [
+  { nombre: "Productos", descripcion: "Gestiona tu catálogo de moda.", ruta: "/productos", color: "bg-blue-50", icon: "👗" },
+  { nombre: "Marcas", descripcion: "Administra las marcas disponibles.", ruta: "/marcas", color: "bg-gray-100", icon: "🏷️" },
+  { nombre: "Categorías", descripcion: "Organiza las categorías de productos.", ruta: "/categorias", color: "bg-green-50", icon: "📂" },
 ];
 
-const Catalogos = () => {
-  // const { user } = useAuth(); // úsalo si filtrarás por rol/permiso
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-blue-500 mb-6">Catálogos</h1>
+export default function Catalogos() {
+  const navigate = useNavigate();
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {catalogItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              to={item.path}
-              key={item.id}
-              className="flex flex-col items-center p-5 bg-white rounded-lg shadow-md
-                         hover:shadow-lg hover:bg-slate-100 transition-all duration-200"
-            >
-              <div className={`w-16 h-16 rounded-full ${item.color} flex items-center justify-center mb-3`}>
-                <Icon size={36} className="text-white" />
-              </div>
-              <div className="text-lg font-medium text-gray-700">{item.name}</div>
-            </Link>
-          );
-        })}
+  return (
+    <div className="max-w-4xl mx-auto py-10 px-4">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 font-serif">Catálogos</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {catalogos.map((cat) => (
+          <button
+            key={cat.nombre}
+            onClick={() => navigate(cat.ruta)}
+            className={`flex flex-col items-center justify-center ${cat.color} rounded-xl shadow hover:shadow-lg transition-all border border-gray-200 py-8 px-4 hover:bg-gray-200`}
+          >
+            <span className="text-5xl mb-4">{cat.icon}</span>
+            <span className="font-bold text-lg text-gray-700 mb-2">{cat.nombre}</span>
+            <span className="text-gray-500 text-center">{cat.descripcion}</span>
+          </button>
+        ))}
       </div>
     </div>
   );
-};
-
-export default Catalogos;
+}

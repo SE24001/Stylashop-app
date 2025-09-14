@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
-    <footer className="bg-blue-700 text-white text-center py-2">
-      &copy; {new Date().getFullYear()} RestaurantApp - DevSoft S.A. de C.V.
+    <footer className="bg-gray-100 text-gray-600 text-center py-4 font-semibold shadow-inner border-t border-gray-200">
+      &copy; {new Date().getFullYear()} StylaShop - Moda & Elegancia
     </footer>
   );
 };

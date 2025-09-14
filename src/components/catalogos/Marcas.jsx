@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -14,6 +15,7 @@ import { urlBase } from '../utils/config';
 import { fetchMarcas } from '../services/catalogosService';
 
 export default function Marcas() {
+    const navigate = useNavigate();
     let emptyMarca = {
         id: null,
         nombre: '',
@@ -302,87 +304,98 @@ export default function Marcas() {
         </div>
     );
 
-    const marcaDialogFooter = (
-        <React.Fragment>
-            <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} className="mr-2" />
-            <Button label={marca.id === null ? 'Guardar' : 'Actualizar'} icon="pi pi-check" onClick={saveOrUpdate} />
-        </React.Fragment>
-    );
+        const marcaDialogFooter = (
+                <React.Fragment>
+                        <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} className="mr-2" />
+                        <Button label={marca.id === null ? 'Guardar' : 'Actualizar'} icon="pi pi-check" onClick={saveOrUpdate} />
+                </React.Fragment>
+        );
 
-    const deleteMarcaDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteDialog} />
-            <Button label="Sí" icon="pi pi-check" severity="danger" onClick={deleteMarca} />
-        </React.Fragment>
-    );
+        const deleteMarcaDialogFooter = (
+                <React.Fragment>
+                        <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteDialog} />
+                        <Button label="Sí" icon="pi pi-check" severity="danger" onClick={deleteMarca} />
+                </React.Fragment>
+        );
 
-    return (
-        <div>
-            <Toast ref={toast} />
-            <div className="card">
-                <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
-
-                <DataTable
-                    ref={dt}
-                    value={marcas}
-                    dataKey="id"
-                    paginator
-                    rows={10}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} marcas"
-                    globalFilter={globalFilter}
-                    header={header}
-                >
-                    <Column field="nombre" header="Marca" sortable style={{ minWidth: '16rem' }}></Column>
-                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-                </DataTable>
-            </div>
-
-            <Dialog
-                visible={dialog}
-                style={{ width: '32rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header={marca.id === null ? 'Registro de Marca' : 'Actualización'}
-                modal
-                className="p-fluid"
-                footer={marcaDialogFooter}
-                onHide={hideDialog}
-            >
-                <div className="field">
-                    <label htmlFor="nombre" className="font-bold">
-                        Nombre
-                    </label>
-                    <InputText
-                        id="nombre"
-                        value={marca.nombre}
-                        onChange={(e) => onInputChange(e, 'nombre')}
-                        required
-                        autoFocus
-                        className={classNames({ 'p-invalid': submitted && !marca.nombre })}
-                    />
-                    {submitted && !marca.nombre && <small className="p-error">Nombre es requerido.</small>}
+            return (
+                <div className="max-w-4xl mx-auto py-6 px-2 sm:px-4 md:px-8 lg:px-4">
+                    <button
+                        className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 font-semibold px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 shadow"
+                        onClick={() => navigate(-1)}
+                    >
+                        <span className="pi pi-arrow-left" />
+                        <span>Regresar</span>
+                    </button>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-8 font-serif">Marcas</h1>
+                    <div className="bg-white rounded-xl shadow p-4 sm:p-8 flex flex-col items-center mb-8 w-full">
+                        <span className="text-5xl mb-4">🏷️</span>
+                        <span className="font-bold text-lg text-gray-700 mb-2">Marcas</span>
+                        <span className="text-gray-500 text-center mb-4">Administra las marcas disponibles en tu tienda.</span>
+                        <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-6 py-3 rounded-lg shadow transition-colors mb-4" onClick={openNew}>Nueva Marca</button>
+                    </div>
+                    <div className="bg-white rounded-xl shadow p-2 sm:p-6 w-full overflow-x-auto">
+                        <DataTable
+                            ref={dt}
+                            value={marcas}
+                            dataKey="id"
+                            paginator
+                            rows={10}
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                            currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} marcas"
+                            globalFilter={globalFilter}
+                            header={header}
+                        >
+                            <Column field="nombre" header="Marca" sortable style={{ minWidth: '16rem' }}></Column>
+                            <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                        </DataTable>
+                    </div>
+                    {/* Crear / Editar Modal */}
+                    <Dialog
+                        visible={dialog}
+                        style={{ width: '28rem' }}
+                        header={marca.id ? 'Actualizar Marca' : 'Nueva Marca'}
+                        modal
+                        className="p-fluid"
+                        footer={marcaDialogFooter}
+                        onHide={hideDialog}
+                    >
+                        <div className="bg-gray-50 rounded-xl p-2 sm:p-4 w-full">
+                            <div className="flex flex-col sm:flex-row items-center mb-6 gap-2 sm:gap-6">
+                                <span className="text-3xl mr-2">🏷️</span>
+                                <span className="font-bold text-lg text-gray-700">{marca.id ? 'Editar Marca' : 'Nueva Marca'}</span>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="field w-full">
+                                    <label htmlFor="nombre" className="font-bold">Nombre</label>
+                                    <InputText
+                                        id="nombre"
+                                        value={marca.nombre}
+                                        onChange={(e) => onInputChange(e, 'nombre')}
+                                        required
+                                        autoFocus
+                                        className={classNames({ 'p-invalid': submitted && !marca.nombre }) + ' rounded-lg border-gray-300 w-full'}
+                                    />
+                                    {submitted && !marca.nombre?.trim() && <small className="p-error">El nombre es requerido.</small>}
+                                </div>
+                            </div>
+                        </div>
+                    </Dialog>
+                    {/* Eliminar Modal */}
+                    <Dialog
+                        visible={deleteDialog}
+                        style={{ width: '24rem' }}
+                        header="Confirmación"
+                        modal
+                        footer={deleteMarcaDialogFooter}
+                        onHide={hideDeleteDialog}
+                    >
+                        <div className="bg-gray-50 rounded-xl p-4 sm:p-6 flex flex-col items-center w-full">
+                            <span className="text-4xl mb-2 text-yellow-500">⚠️</span>
+                            <span className="font-bold text-lg text-gray-700 mb-2 text-center">¿Seguro de eliminar la marca <b>{marca.nombre}</b>?</span>
+                        </div>
+                    </Dialog>
                 </div>
-            </Dialog>
-
-            <Dialog
-                visible={deleteDialog}
-                style={{ width: '32rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header="Confirmación"
-                modal
-                footer={deleteMarcaDialogFooter}
-                onHide={hideDeleteDialog}
-            >
-                <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    {marca && (
-                        <span>
-                            ¿Está seguro de eliminar la marca <b>{marca.nombre}</b>?
-                        </span>
-                    )}
-                </div>
-            </Dialog>
-        </div>
-    );
+            );
 }
