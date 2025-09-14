@@ -45,15 +45,17 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-700">
-            Iniciar Sesión
-          </h2>
-        </div>
-
+      <div className="bg-white border border-gray-200 shadow-lg rounded-xl w-full max-w-md flex flex-col items-center p-8">
+        <img
+          src="/images/logo.jpeg"
+          alt="Logo"
+          className="w-20 h-20 rounded-full mb-4 shadow"
+        />
+        <h2 className="text-2xl font-bold text-gray-800 mb-1">StylaShop</h2>
+        <span className="text-gray-500 text-sm mb-6">Panel de Administración</span>
+        <h3 className="text-xl font-bold text-gray-700 mb-6">Iniciar Sesión</h3>
         {/* Formulario de login */}
-        <form onSubmit={sendLogin} className="space-y-6">
+        <form onSubmit={sendLogin} className="space-y-6 w-full">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
               Usuario
@@ -68,12 +70,10 @@ const Login = () => {
                 }
                 autoComplete="username"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400
-                           shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
-
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Contraseña
@@ -88,23 +88,18 @@ const Login = () => {
                 }
                 autoComplete="current-password"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400
-                           shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
-
           {/* Mensaje de error */}
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           {/* Botón enviar */}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full justify-center bg-blue-600 
-                  text-white border-transparent border rounded-md text-md shadow-sm 
-                  py-2 px-4 font-bold hover:bg-blue-800 disabled:opacity-60"
+              className="flex w-full justify-center bg-gray-800 text-white border-transparent border rounded-md text-md shadow font-bold py-2 px-4 hover:bg-gray-900 disabled:opacity-60 transition-colors"
             >
               {loading ? "Ingresando..." : "Iniciar Sesión"}
             </button>
