@@ -47,7 +47,7 @@ export const createPago = async (dto, token) => {
     const pagoData = {
         fechaPago: dto.fechaPago,
         monto: dto.monto,
-        metodoPago: dto.metodoPago,
+        metodo: dto.metodo,
         venta: { id: dto.ventaDTO.id } // Solo enviamos el ID de la venta
     };
     

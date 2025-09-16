@@ -205,7 +205,7 @@ export default function CajeroView() {
       fechaPago: new Date().toISOString().split("T")[0],
       ventaDTO: { id: venta.id },
       monto: venta.total,
-      metodoPago: metodo // Asegurar que este campo se envíe
+      metodo: metodo // Asegurar que este campo se envíe
     };
 
     console.log("=== DEBUG PAGO ===");
