@@ -79,7 +79,7 @@ export default function Categorias() {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
+                
                 if (response.status === 200) {
                     const { message, categoria: updatedCategoria } = response.data;
 
@@ -270,6 +270,7 @@ export default function Categorias() {
 
             return (
                 <div className="max-w-4xl mx-auto py-6 px-2 sm:px-4 md:px-8 lg:px-4">
+                    <Toast ref={toast} />
                     <button
                         className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 font-semibold px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 shadow"
                         onClick={() => navigate(-1)}
